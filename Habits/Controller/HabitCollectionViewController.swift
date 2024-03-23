@@ -7,82 +7,174 @@
 
 import UIKit
 
-private let reuseIdentifier = "Cell"
 
 class HabitCollectionViewController: UICollectionViewController {
-
+    
+    typealias DataSourceType = UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item.ID>
+    
+    enum ViewModel{
+        enum Section: Hashable, Comparable{
+            
+            case favorite
+            case category(_ category: Category)
+            
+            static func < (lhs: Section, rhs: Section) -> Bool {
+                switch (lhs, rhs){
+                    
+                case (.category(let l), .category(let r)): return l.name < r.name
+                case (.favorite, _): return true
+                case (_, .favorite): return false
+                    
+                }
+            }
+        }
+        
+        typealias Item = Habit
+    }
+    
+    enum SectionHeader: String{
+        case kind = "SectionHeader"
+        
+        var identifier: String{
+            return rawValue
+        }
+    }
+    
+    struct Model{
+        var habitsByName = [String: Habit]()
+        var favoriteHabits: [Habit]{
+            return Settings.shared.favoriteHabits
+        }
+    }
+    
+    var model = Model()
+    var dataSource: DataSourceType!
+    var items: [ViewModel.Item] = []
+    
+    var habitsRequestTask: Task<Void, Never>? = nil
+    deinit{ habitsRequestTask?.cancel() }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
-        // Do any additional setup after loading the view.
+        
+        dataSource = createDataSource()
+        collectionView.dataSource  = dataSource
+        collectionView.collectionViewLayout = createLayout()
+        
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-    // MARK: UICollectionViewDataSource
-
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
-
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 0
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
     
-        // Configure the cell
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        update()
+    }
     
-        return cell
+    func update(){
+        habitsRequestTask?.cancel()
+        habitsRequestTask = Task{
+            if let habits = try? await HabitRequest().send(){
+                model.habitsByName = habits
+            }else{
+                model.habitsByName = [:]
+            }
+            
+            updateCollectionView()
+            habitsRequestTask = nil
+        }
+        
+        
     }
-
-    // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
     
+    func updateCollectionView(){
+        var itemsBySection = model.habitsByName.values.reduce(into: [ViewModel.Section: [ViewModel.Item]]()) { partialResult, habit in
+            let item = habit
+            
+            let section: ViewModel.Section
+            if model.favoriteHabits.contains(habit){
+                section = .favorite
+            }else{
+                section = .category(habit.category)
+            }
+            
+            partialResult[section, default: []].append(item)
+        }
+        
+        itemsBySection = itemsBySection.mapValues({$0.sorted()})
+        
+        items = itemsBySection.values.reduce([], +)
+        
+        let sectionIDs = itemsBySection.keys.sorted()
+        dataSource.applySnapshotUsing(sectionIDs: sectionIDs, itemBySections: itemsBySection.mapValues({$0.map(\.id)}))
     }
-    */
-
+    
+    func createDataSource() -> DataSourceType{
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, ViewModel.Item.ID>{ [weak self] cell, indexPath, itemIdentifier in
+            guard let self, let item = items.first(where: {$0.id == itemIdentifier}) else {return}
+            
+            var content   = cell.defaultContentConfiguration()
+            content.text = item.name
+            cell.contentConfiguration = content
+        }
+        
+        let dataSource = DataSourceType(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
+        }
+        
+        let headerRegistration = UICollectionView.SupplementaryRegistration<NameSectionHeaderView>(elementKind: SectionHeader.kind.identifier) { header, elementKind, indexPath in
+            let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
+            
+            switch section{
+                
+            case .favorite:
+                header.nameLabel.text = "Favorite"
+            case .category(let category):
+                header.nameLabel.text = category.name
+            }
+        }
+        
+        dataSource.supplementaryViewProvider = {collectionView, kind, indexPath in
+            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+        }
+        
+        return dataSource
+    }
+    
+    func createLayout() -> UICollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44))
+        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+        
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(36))
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: SectionHeader.kind.identifier, alignment: .top)
+        sectionHeader.pinToVisibleBounds  = true
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)
+        section.boundarySupplementaryItems = [sectionHeader]
+        
+        return UICollectionViewCompositionalLayout(section: section)
+        
+        
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+        let config = UIContextMenuConfiguration(actionProvider:  { [weak self] _ in
+            guard let self, let indexPath = indexPaths.first, let itemIndentifier = dataSource.itemIdentifier(for: indexPath), let item = items.first(where: {$0.id == itemIndentifier}) else {return nil}
+            
+            
+            let favoriteToggle = UIAction(title: model.favoriteHabits.contains(item) ? "Unfavorite" : "Favorite") { action in
+                Settings.shared.toggleFavorite(item)
+                self.updateCollectionView()
+            }
+            
+            return UIMenu(title: "", children: [favoriteToggle])
+        })
+        
+        return config
+        
+    }
+    
 }
+

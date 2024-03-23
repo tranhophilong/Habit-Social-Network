@@ -7,82 +7,139 @@
 
 import UIKit
 
-private let reuseIdentifier = "Cell"
 
 class UserCollectionViewController: UICollectionViewController {
-
+    
+    typealias DataSourceType = UICollectionViewDiffableDataSource<ViewModel.section, ViewModel.Item.ID>
+    
+    enum ViewModel{
+        typealias section = Int
+        
+        struct Item: Identifiable, Equatable{
+            var id: String{
+                return user.id
+            }
+            let user: User
+            let isFollowed: Bool
+            
+            
+            static func == (lhs: Item, rhs: Item) -> Bool {
+                return lhs.id == rhs.id
+            }
+            
+        }
+    }
+    
+    struct Model{
+        var usersByID = [String: User]()
+        var followedUsers: [User]{
+            return Array(usersByID.filter{
+                Settings.shared.followedUserIDs.contains($0.key)
+            }.values)
+        }
+    }
+    
+    var dataSource: DataSourceType!
+    var model = Model()
+    var items: [ViewModel.Item] = []
+    
+    var userRequestTask: Task<Void, Never>? = nil
+    deinit{ userRequestTask?.cancel()}
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
-        // Do any additional setup after loading the view.
+        dataSource = createDataSource()
+        collectionView.dataSource = dataSource
+        collectionView.collectionViewLayout = createLayout()
+        
+        update()
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
+    func update(){
+        userRequestTask?.cancel()
+        
+        userRequestTask = Task{
+            if let users = try? await UserRequest().send(){
+                model.usersByID = users
+            }else{
+                model.usersByID = [:]
+            }
+            
+            
+            updateCollectionView()
+            userRequestTask = nil
+        }
     }
-    */
-
-    // MARK: UICollectionViewDataSource
-
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
-
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 0
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
     
-        // Configure the cell
+    func updateCollectionView(){
+        items = model.usersByID.values.sorted().reduce(into: [ViewModel.Item](), { partialResult, user in
+            partialResult.append(ViewModel.Item(user: user, isFollowed: model.followedUsers.contains(user)))
+            
+        })
+        
+        let userIDs = items.map(\.id)
+        
+        let itemsBySection = [0: userIDs]
+        
+        dataSource.applySnapshotUsing(sectionIDs: [0], itemBySections: itemsBySection)
+    }
     
-        return cell
+    func createDataSource() -> DataSourceType{
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, ViewModel.Item.ID> { [weak self] cell, indexPath, itemIdentifier in
+            guard let self, let item = items.first(where: {$0.id == itemIdentifier}) else {return}
+            
+            var content = cell.defaultContentConfiguration()
+            content.text = item.user.name
+            content.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 11, leading: 8, bottom: 11, trailing: 8)
+            content.textProperties.alignment = .center
+            cell.contentConfiguration = content
+            
+            var backgroudConfiguration = UIBackgroundConfiguration.clear()
+            backgroudConfiguration.backgroundColor = .systemGray4
+            backgroudConfiguration.cornerRadius = 8
+            cell.backgroundConfiguration = backgroudConfiguration
+            
+        }
+        
+        let datasource = DataSourceType(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
+        }
+        
+        return datasource
     }
-
-    // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
     
+    func createLayout() -> UICollectionViewCompositionalLayout{
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalHeight(1), heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(0.45))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item, item])
+        group.interItemSpacing = .fixed(20)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 20
+        section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
+        
+        return UICollectionViewCompositionalLayout(section: section)
     }
-    */
+    
+    override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+        let config = UIContextMenuConfiguration(actionProvider:  { [weak self] _ in
+            guard let self, let indexPath = indexPaths.first, let itemIndentifier = dataSource.itemIdentifier(for: indexPath), let item = items.first(where: {$0.id == itemIndentifier}) else {return nil}
+            
+            
+            let followedToggle = UIAction(title: item.isFollowed ? "Unfollow" : "Follow") { action in
+                Settings.shared.toggleFollowed(item.user)
+                self.updateCollectionView()
+            }
+            
+            return UIMenu(title: "", children: [followedToggle])
+        })
+        
+        return config
+        
+    }
 
 }
