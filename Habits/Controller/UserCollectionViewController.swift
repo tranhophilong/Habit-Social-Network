@@ -125,6 +125,8 @@ class UserCollectionViewController: UICollectionViewController {
         return UICollectionViewCompositionalLayout(section: section)
     }
     
+//    MARK: Delegate
+    
     override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
         let config = UIContextMenuConfiguration(actionProvider:  { [weak self] _ in
             guard let self, let indexPath = indexPaths.first, let itemIndentifier = dataSource.itemIdentifier(for: indexPath), let item = items.first(where: {$0.id == itemIndentifier}) else {return nil}
@@ -140,6 +142,17 @@ class UserCollectionViewController: UICollectionViewController {
         
         return config
         
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let itemIdentifier = dataSource.itemIdentifier(for: indexPath), let item = items.first(where: {$0.id == itemIdentifier}) else {return}
+    
+        let storyboard = UIStoryboard(name: "Main", bundle: Bundle(for: UserDetailViewController.self))
+        let controller = storyboard.instantiateViewController(identifier: "UserDetailViewController") { coder in
+            UserDetailViewController(coder: coder, user: item.user)
+        }
+        
+        navigationController?.pushViewController(controller, animated: true)
     }
 
 }

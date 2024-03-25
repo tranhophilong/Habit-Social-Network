@@ -19,6 +19,8 @@ struct Settings{
     
     private let defaults = UserDefaults.standard
     
+    let currentUser = User(id: "activeUser", name: "Phi Long", color: nil, bio: "IOS Developer")
+    
     
     var favoriteHabits: [Habit]{
         get{

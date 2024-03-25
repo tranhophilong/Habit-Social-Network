@@ -26,7 +26,6 @@ extension User: Hashable{
         return hasher.combine(id)
     }
     
-    
 }
 
 extension User: Comparable{

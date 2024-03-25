@@ -5,7 +5,7 @@
 //  Created by Long Tran on 22/03/2024.
 //
 
-import Foundation
+import UIKit
 
 
 protocol APIRequest{
@@ -43,8 +43,9 @@ extension APIRequest{
         
         if let data = postData{
             request.httpBody = data
-            request.httpMethod = "POST"
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpMethod = "POST"
+           
         }
         
         return request
@@ -73,3 +74,38 @@ extension APIRequest where Response: Decodable{
     }
 }
 
+
+
+enum ImageRequestError: Error{
+    case couldNotInitializeFromData
+    case imageDataMissing
+}
+
+extension APIRequest where Response == UIImage{
+    func send() async throws -> UIImage{
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else{
+           throw ImageRequestError.imageDataMissing
+        }
+        
+        guard let image = UIImage(data: data) else{
+            throw ImageRequestError.couldNotInitializeFromData
+        }
+        
+        return image
+    }
+}
+
+
+extension APIRequest{
+    func send() async throws -> Void{
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        print((response as? HTTPURLResponse)?.statusCode)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else{
+            throw APIRequestError.requestFaild
+        }
+        
+    }
+}

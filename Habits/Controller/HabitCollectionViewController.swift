@@ -159,6 +159,8 @@ class HabitCollectionViewController: UICollectionViewController {
         
     }
     
+//     MARK: Delegate
+    
     override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
         let config = UIContextMenuConfiguration(actionProvider:  { [weak self] _ in
             guard let self, let indexPath = indexPaths.first, let itemIndentifier = dataSource.itemIdentifier(for: indexPath), let item = items.first(where: {$0.id == itemIndentifier}) else {return nil}
@@ -174,6 +176,19 @@ class HabitCollectionViewController: UICollectionViewController {
         
         return config
         
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let itemIdentiifer = dataSource.itemIdentifier(for: indexPath), let item = items.first(where: {$0.id == itemIdentiifer}) else {return}
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: Bundle(for: HabitDetailViewController.self))
+        
+        let controller = storyboard.instantiateViewController(identifier: "HabitDetailViewController") { coder in
+            HabitDetailViewController(coder: coder, habit: item)
+        }
+    
+        navigationController?.pushViewController(controller, animated: true)
+                
     }
     
 }

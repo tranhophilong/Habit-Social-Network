@@ -9,6 +9,15 @@
 /* Begin PBXBuildFile section */
 		860A53AF2BADD4E000D4E869 /* NameSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860A53AE2BADD4E000D4E869 /* NameSectionHeaderView.swift */; };
 		860A53B12BAE8F4400D4E869 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860A53B02BAE8F4400D4E869 /* User.swift */; };
+		860A53B32BAEA94C00D4E869 /* HabitStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860A53B22BAEA94C00D4E869 /* HabitStatistics.swift */; };
+		860A53B52BAEA95900D4E869 /* UserCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860A53B42BAEA95900D4E869 /* UserCount.swift */; };
+		860A53B72BAF1E7500D4E869 /* UserStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860A53B62BAF1E7500D4E869 /* UserStatistics.swift */; };
+		860A53B92BAF1EA300D4E869 /* HabitCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860A53B82BAF1EA300D4E869 /* HabitCount.swift */; };
+		860A53BB2BB0244400D4E869 /* LoggedHabit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860A53BA2BB0244400D4E869 /* LoggedHabit.swift */; };
+		860A53BE2BB124D600D4E869 /* LeaderBoardHabitCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860A53BC2BB124D600D4E869 /* LeaderBoardHabitCollectionViewCell.swift */; };
+		860A53BF2BB124D600D4E869 /* LeaderBoardHabitCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 860A53BD2BB124D600D4E869 /* LeaderBoardHabitCollectionViewCell.xib */; };
+		860A53C22BB129F500D4E869 /* FollwedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860A53C02BB129F500D4E869 /* FollwedCollectionViewCell.swift */; };
+		860A53C32BB129F500D4E869 /* FollwedCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 860A53C12BB129F500D4E869 /* FollwedCollectionViewCell.xib */; };
 		8693BCD82BAC8A94009483A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8693BCD72BAC8A94009483A8 /* AppDelegate.swift */; };
 		8693BCDA2BAC8A94009483A8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8693BCD92BAC8A94009483A8 /* SceneDelegate.swift */; };
 		8693BCDF2BAC8A94009483A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8693BCDD2BAC8A94009483A8 /* Main.storyboard */; };
@@ -32,6 +41,15 @@
 /* Begin PBXFileReference section */
 		860A53AE2BADD4E000D4E869 /* NameSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSectionHeaderView.swift; sourceTree = "<group>"; };
 		860A53B02BAE8F4400D4E869 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		860A53B22BAEA94C00D4E869 /* HabitStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitStatistics.swift; sourceTree = "<group>"; };
+		860A53B42BAEA95900D4E869 /* UserCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCount.swift; sourceTree = "<group>"; };
+		860A53B62BAF1E7500D4E869 /* UserStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStatistics.swift; sourceTree = "<group>"; };
+		860A53B82BAF1EA300D4E869 /* HabitCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCount.swift; sourceTree = "<group>"; };
+		860A53BA2BB0244400D4E869 /* LoggedHabit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedHabit.swift; sourceTree = "<group>"; };
+		860A53BC2BB124D600D4E869 /* LeaderBoardHabitCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderBoardHabitCollectionViewCell.swift; sourceTree = "<group>"; };
+		860A53BD2BB124D600D4E869 /* LeaderBoardHabitCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LeaderBoardHabitCollectionViewCell.xib; sourceTree = "<group>"; };
+		860A53C02BB129F500D4E869 /* FollwedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollwedCollectionViewCell.swift; sourceTree = "<group>"; };
+		860A53C12BB129F500D4E869 /* FollwedCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FollwedCollectionViewCell.xib; sourceTree = "<group>"; };
 		8693BCD42BAC8A94009483A8 /* Habits.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Habits.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8693BCD72BAC8A94009483A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8693BCD92BAC8A94009483A8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -65,12 +83,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		860A53AD2BADD4B300D4E869 /* Views */ = {
+		860A53AD2BADD4B300D4E869 /* View */ = {
 			isa = PBXGroup;
 			children = (
 				860A53AE2BADD4E000D4E869 /* NameSectionHeaderView.swift */,
+				860A53BC2BB124D600D4E869 /* LeaderBoardHabitCollectionViewCell.swift */,
+				860A53BD2BB124D600D4E869 /* LeaderBoardHabitCollectionViewCell.xib */,
+				860A53C02BB129F500D4E869 /* FollwedCollectionViewCell.swift */,
+				860A53C12BB129F500D4E869 /* FollwedCollectionViewCell.xib */,
 			);
-			path = Views;
+			path = View;
 			sourceTree = "<group>";
 		};
 		8693BCCB2BAC8A94009483A8 = {
@@ -97,7 +119,7 @@
 				8693BD022BAD4D49009483A8 /* APIService.swift */,
 				8693BD042BAD8AFD009483A8 /* Settings.swift */,
 				8693BD062BAD96ED009483A8 /* UICollectionViewDiffableDataSource+ViewModel.swift */,
-				860A53AD2BADD4B300D4E869 /* Views */,
+				860A53AD2BADD4B300D4E869 /* View */,
 				8693BCFF2BAD43D4009483A8 /* Protocol */,
 				8693BCEC2BAD37CD009483A8 /* Model */,
 				8693BCEB2BAD37C2009483A8 /* Controller */,
@@ -129,6 +151,11 @@
 				8693BCFB2BAD3D83009483A8 /* Category.swift */,
 				8693BCFD2BAD3D9F009483A8 /* Color.swift */,
 				860A53B02BAE8F4400D4E869 /* User.swift */,
+				860A53B22BAEA94C00D4E869 /* HabitStatistics.swift */,
+				860A53B42BAEA95900D4E869 /* UserCount.swift */,
+				860A53B62BAF1E7500D4E869 /* UserStatistics.swift */,
+				860A53B82BAF1EA300D4E869 /* HabitCount.swift */,
+				860A53BA2BB0244400D4E869 /* LoggedHabit.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -202,6 +229,8 @@
 				8693BCE42BAC8A97009483A8 /* LaunchScreen.storyboard in Resources */,
 				8693BCE12BAC8A97009483A8 /* Assets.xcassets in Resources */,
 				8693BCDF2BAC8A94009483A8 /* Main.storyboard in Resources */,
+				860A53BF2BB124D600D4E869 /* LeaderBoardHabitCollectionViewCell.xib in Resources */,
+				860A53C32BB129F500D4E869 /* FollwedCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,17 +241,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				860A53B52BAEA95900D4E869 /* UserCount.swift in Sources */,
 				860A53AF2BADD4E000D4E869 /* NameSectionHeaderView.swift in Sources */,
+				860A53BB2BB0244400D4E869 /* LoggedHabit.swift in Sources */,
 				8693BCEE2BAD37EC009483A8 /* HomeCollectionViewController.swift in Sources */,
 				8693BCFC2BAD3D83009483A8 /* Category.swift in Sources */,
 				8693BD072BAD96ED009483A8 /* UICollectionViewDiffableDataSource+ViewModel.swift in Sources */,
+				860A53C22BB129F500D4E869 /* FollwedCollectionViewCell.swift in Sources */,
 				8693BD012BAD43EB009483A8 /* APIRequest.swift in Sources */,
 				8693BCFE2BAD3D9F009483A8 /* Color.swift in Sources */,
 				8693BD052BAD8AFD009483A8 /* Settings.swift in Sources */,
+				860A53BE2BB124D600D4E869 /* LeaderBoardHabitCollectionViewCell.swift in Sources */,
 				860A53B12BAE8F4400D4E869 /* User.swift in Sources */,
+				860A53B72BAF1E7500D4E869 /* UserStatistics.swift in Sources */,
 				8693BCF22BAD381F009483A8 /* UserCollectionViewController.swift in Sources */,
 				8693BCF82BAD3A55009483A8 /* UserDetailViewController.swift in Sources */,
 				8693BCF02BAD3810009483A8 /* HabitCollectionViewController.swift in Sources */,
+				860A53B32BAEA94C00D4E869 /* HabitStatistics.swift in Sources */,
+				860A53B92BAF1EA300D4E869 /* HabitCount.swift in Sources */,
 				8693BCD82BAC8A94009483A8 /* AppDelegate.swift in Sources */,
 				8693BCF42BAD3830009483A8 /* LogHabitCollectionViewController.swift in Sources */,
 				8693BD032BAD4D49009483A8 /* APIService.swift in Sources */,
