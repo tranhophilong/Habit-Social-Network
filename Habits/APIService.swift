@@ -93,3 +93,11 @@ struct LogHabitRequest: APIRequest{
     
     
 }
+
+struct CombinedStatsRequest: APIRequest{
+    typealias Response = CombinedStats
+    
+    var path: String {"/combinedStats"}
+    
+    
+}

@@ -102,7 +102,6 @@ extension APIRequest{
     func send() async throws -> Void{
         let (_, response) = try await URLSession.shared.data(for: request)
         
-        print((response as? HTTPURLResponse)?.statusCode)
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else{
             throw APIRequestError.requestFaild
         }
