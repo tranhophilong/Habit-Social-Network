@@ -18,6 +18,16 @@ class HabitCollectionViewController: UICollectionViewController {
             case favorite
             case category(_ category: Category)
             
+            var sectionColor: UIColor{
+                switch self{
+                    
+                case .favorite:
+                    return favoriteHabitColor
+                case .category(let category):
+                    return category.color.uiColor
+                }
+            }
+            
             static func < (lhs: Section, rhs: Section) -> Bool {
                 switch (lhs, rhs){
                     
@@ -38,6 +48,8 @@ class HabitCollectionViewController: UICollectionViewController {
         var identifier: String{
             return rawValue
         }
+        
+        
     }
     
     struct Model{
@@ -107,13 +119,17 @@ class HabitCollectionViewController: UICollectionViewController {
         dataSource.applySnapshotUsing(sectionIDs: sectionIDs, itemBySections: itemsBySection.mapValues({$0.map(\.id)}))
     }
     
+    func configCell(_ cell: UICollectionViewListCell, withItem item: ViewModel.Item){
+        var content   = cell.defaultContentConfiguration()
+        content.text = item.name
+        cell.contentConfiguration = content
+    }
+    
     func createDataSource() -> DataSourceType{
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, ViewModel.Item.ID>{ [weak self] cell, indexPath, itemIdentifier in
             guard let self, let item = items.first(where: {$0.id == itemIdentifier}) else {return}
             
-            var content   = cell.defaultContentConfiguration()
-            content.text = item.name
-            cell.contentConfiguration = content
+            configCell(cell, withItem: item)
         }
         
         let dataSource = DataSourceType(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
@@ -124,12 +140,13 @@ class HabitCollectionViewController: UICollectionViewController {
             let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
             
             switch section{
-                
             case .favorite:
                 header.nameLabel.text = "Favorite"
             case .category(let category):
                 header.nameLabel.text = category.name
             }
+            
+            header.backgroundColor = section.sectionColor
         }
         
         dataSource.supplementaryViewProvider = {collectionView, kind, indexPath in

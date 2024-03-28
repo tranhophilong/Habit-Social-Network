@@ -4,6 +4,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -23,18 +24,28 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" text="Message" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uik-NW-alG">
-                        <rect key="frame" x="32" y="45" width="260" height="47"/>
+                        <rect key="frame" x="32" y="45" width="260" height="46"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TgV-Sn-tKr">
+                        <rect key="frame" x="15" y="99" width="270" height="1"/>
+                        <color key="backgroundColor" systemColor="labelColor"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="NfW-UD-jop"/>
+                        </constraints>
+                    </view>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="TgV-Sn-tKr" secondAttribute="bottom" id="3Ry-RP-0U3"/>
                 <constraint firstItem="uik-NW-alG" firstAttribute="leading" secondItem="Hs6-Ov-PtQ" secondAttribute="leading" constant="24" id="BY0-JH-tNO"/>
+                <constraint firstItem="TgV-Sn-tKr" firstAttribute="top" secondItem="uik-NW-alG" secondAttribute="bottom" constant="8" id="Dky-vi-rjf"/>
+                <constraint firstItem="TgV-Sn-tKr" firstAttribute="width" secondItem="ZTg-uK-7eu" secondAttribute="width" multiplier="0.9" id="EEk-SZ-jR1"/>
                 <constraint firstAttribute="trailing" secondItem="uik-NW-alG" secondAttribute="trailing" constant="8" id="YGn-ET-Zv3"/>
-                <constraint firstAttribute="bottom" secondItem="uik-NW-alG" secondAttribute="bottom" constant="8" id="gPq-Ea-u2t"/>
+                <constraint firstItem="TgV-Sn-tKr" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="bBX-Q7-zW7"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Hs6-Ov-PtQ" secondAttribute="trailing" constant="8" id="iEg-sr-1IU"/>
                 <constraint firstItem="uik-NW-alG" firstAttribute="top" secondItem="Hs6-Ov-PtQ" secondAttribute="bottom" constant="16" id="jVr-1N-Nt6"/>
                 <constraint firstItem="Hs6-Ov-PtQ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="pvS-Nm-STA"/>
@@ -43,9 +54,16 @@
             <size key="customSize" width="300" height="100"/>
             <connections>
                 <outlet property="messageLabel" destination="uik-NW-alG" id="K27-Zf-wxc"/>
+                <outlet property="separatorLineView" destination="TgV-Sn-tKr" id="gSZ-Uq-MQz"/>
+                <outlet property="separatorLineViewHeightContraint" destination="NfW-UD-jop" id="si1-Nh-sIt"/>
                 <outlet property="userNameLabel" destination="Hs6-Ov-PtQ" id="MY3-Ee-1i4"/>
             </connections>
-            <point key="canvasLocation" x="137" y="62"/>
+            <point key="canvasLocation" x="135.87786259541986" y="61.971830985915496"/>
         </collectionViewCell>
     </objects>
+    <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>

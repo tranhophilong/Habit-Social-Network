@@ -74,8 +74,6 @@ extension APIRequest where Response: Decodable{
     }
 }
 
-
-
 enum ImageRequestError: Error{
     case couldNotInitializeFromData
     case imageDataMissing
@@ -96,7 +94,6 @@ extension APIRequest where Response == UIImage{
         return image
     }
 }
-
 
 extension APIRequest{
     func send() async throws -> Void{

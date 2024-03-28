@@ -7,7 +7,44 @@
 
 import UIKit
 
+enum SupplementaryItemType{
+    case collectionSupplementaryView
+    case layoutDecorationView
+}
 
+protocol SupplementaryItem{
+    var itemType: SupplementaryItemType { get }
+    
+    var viewKind: String { get }
+}
+
+enum SupplementaryView: String, CaseIterable, SupplementaryItem{
+   case leaderboardSectionHeader
+    case leaderboardBackground
+    case followedUsersSectionHeader
+    
+    var itemType: SupplementaryItemType{
+        switch self{
+        
+        case .leaderboardBackground:
+            return .layoutDecorationView
+        default:
+            return .collectionSupplementaryView
+        }
+    }
+    
+    var viewKind: String{
+        return rawValue
+    }
+    
+    
+}
+
+class SectionBackgroundView: UICollectionReusableView{
+    override func didMoveToSuperview() {
+        backgroundColor = .systemGray6
+    }
+}
 
 class HomeCollectionViewController: UICollectionViewController {
     
@@ -27,7 +64,7 @@ class HomeCollectionViewController: UICollectionViewController {
                 switch self{
                 case .leaderboardHabit(name: let name, _, _):
                     return "leaderboardHabit: \(name)"
-                case .followedUser(let user, message: let message):
+                case .followedUser(let user, message: _):
                     return "followedUser: \(user.name)"
                 }
             }
@@ -298,6 +335,14 @@ class HomeCollectionViewController: UICollectionViewController {
                 return
             }
             
+            cell.contentView.backgroundColor = favoriteHabitColor.withAlphaComponent(0.75)
+            cell.contentView.layer.cornerRadius = 8
+            cell.layer.shadowRadius = 3
+            cell.layer.shadowColor = UIColor.systemGray3.cgColor
+            cell.layer.shadowOffset = CGSize(width: 0, height: 0)
+            cell.layer.shadowOpacity = 1
+            cell.layer.masksToBounds = false
+            
             cell.habitName.text = name
             cell.leaderLabel.text = leadingUserRanking
             cell.secondaryLabel.text = secondaryUserRanking
@@ -311,6 +356,12 @@ class HomeCollectionViewController: UICollectionViewController {
             
             cell.userNameLabel.text = user.name
             cell.messageLabel.text = message
+            
+            if indexPath.item == collectionView.numberOfItems(inSection: indexPath.section) - 1{
+                cell.separatorLineView.isHidden = true
+            }else{
+                cell.separatorLineView.isHidden = false
+            }
         }
         
         let dataSource =  DataSourceType(collectionView: collectionView) {[weak self] collectionView, indexPath, itemIdentifier in
@@ -320,6 +371,34 @@ class HomeCollectionViewController: UICollectionViewController {
                return collectionView.dequeueConfiguredReusableCell(using: habitRegistration, for: indexPath, item: itemIdentifier)
             case .followedUser:
                 return collectionView.dequeueConfiguredReusableCell(using: userResigtration, for: indexPath, item: itemIdentifier)
+            }
+        }
+        
+        let leaderboardHeaderRegistration = UICollectionView.SupplementaryRegistration<NameSectionHeaderView>(elementKind: SupplementaryView.leaderboardSectionHeader.viewKind) { header, elementKind, indexPath in
+            header.nameLabel.text = "Leaderboard"
+            header.nameLabel.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+            header.alignLabelToTop()
+        }
+        
+        let followedUserHeaderRegistration = UICollectionView.SupplementaryRegistration<NameSectionHeaderView>(elementKind: SupplementaryView.followedUsersSectionHeader.viewKind) { header, elementKind, indexPath in
+            header.nameLabel.text = "Following"
+            header.nameLabel.font = UIFont.preferredFont(forTextStyle: .title2)
+            header.alignLabelToYCenter()
+        }
+        
+        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            guard let elementKind = SupplementaryView(rawValue: kind) else{
+                return nil
+            }
+            
+            switch elementKind{
+                
+            case .leaderboardSectionHeader:
+               return collectionView.dequeueConfiguredReusableSupplementary(using: leaderboardHeaderRegistration, for: indexPath)
+            
+            case .followedUsersSectionHeader:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: followedUserHeaderRegistration, for: indexPath)
+            default: return nil
             }
         }
         
@@ -333,32 +412,47 @@ class HomeCollectionViewController: UICollectionViewController {
                 
             case .leaderboard:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.3))
-                let habitFavoriteItem = NSCollectionLayoutItem(layoutSize: itemSize)
+                let leaderboardItem = NSCollectionLayoutItem(layoutSize: itemSize)
                 
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.75), heightDimension: .fractionalWidth(0.77))
-                let habitFavoriteGroup = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, repeatingSubitem: habitFavoriteItem, count: 3)
-                habitFavoriteGroup.interItemSpacing = .fixed(10)
+                let leaderboardGroup = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, repeatingSubitem: leaderboardItem, count: 3)
+                leaderboardGroup.interItemSpacing = .fixed(10)
                 
-                let habitFavoriteSection = NSCollectionLayoutSection(group: habitFavoriteGroup)
-                habitFavoriteSection.interGroupSpacing = 20
-                habitFavoriteSection.orthogonalScrollingBehavior = .continuous
-                habitFavoriteSection.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20)
+                let leaderboardSection = NSCollectionLayoutSection(group: leaderboardGroup)
                 
-                return habitFavoriteSection
+                let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(80))
+                let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: SupplementaryView.leaderboardSectionHeader.viewKind, alignment: .top)
+                
+                let background = NSCollectionLayoutDecorationItem.background(elementKind: SupplementaryView.leaderboardBackground.viewKind)
+                
+                leaderboardSection.boundarySupplementaryItems = [header]
+                leaderboardSection.decorationItems = [background]
+                leaderboardSection.supplementaryContentInsetsReference = .none
+                leaderboardSection.interGroupSpacing = 20
+                leaderboardSection.orthogonalScrollingBehavior = .continuous
+                leaderboardSection.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20)
+                
+                return leaderboardSection
             case .followedUsers:
                 
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(100))
-                let userFollowedItem = NSCollectionLayoutItem(layoutSize: itemSize)
+                let followedUserItem = NSCollectionLayoutItem(layoutSize: itemSize)
                 
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(100))
-                let userFollowedGroup = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [userFollowedItem])
+                let followedUserGroup = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [followedUserItem])
                 
-                let userFollowedSection = NSCollectionLayoutSection(group: userFollowedGroup)
-
-                return userFollowedSection
+                let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60))
+                let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: SupplementaryView.followedUsersSectionHeader.viewKind, alignment: .top)
+            
+                let followedUserSection = NSCollectionLayoutSection(group: followedUserGroup)
+                followedUserSection.boundarySupplementaryItems = [header]
+                
+                return followedUserSection
             }
         
         })
+        
+        layout.register(SectionBackgroundView.self, forDecorationViewOfKind: SupplementaryView.leaderboardBackground.viewKind)
         
         return layout
         

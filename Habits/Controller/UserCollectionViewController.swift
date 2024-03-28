@@ -95,8 +95,9 @@ class UserCollectionViewController: UICollectionViewController {
             content.textProperties.alignment = .center
             cell.contentConfiguration = content
             
+            
             var backgroudConfiguration = UIBackgroundConfiguration.clear()
-            backgroudConfiguration.backgroundColor = .systemGray4
+            backgroudConfiguration.backgroundColor = item.user.color?.uiColor ??  UIColor.systemGray4
             backgroudConfiguration.cornerRadius = 8
             cell.backgroundConfiguration = backgroudConfiguration
             
