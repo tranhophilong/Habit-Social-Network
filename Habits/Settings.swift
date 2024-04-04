@@ -77,9 +77,11 @@ struct Settings{
         var updated = followedUserIDs
         
         if updated.contains(user.id){
-            updated = updated.filter{ $0 != user.id}
+            updated = updated.filter{ $0 != user.id }
         }else{
-            updated.append(user.id)
+            if user.id != currentUser.id{
+                updated.append(user.id)
+            }
         }
         
         followedUserIDs = updated

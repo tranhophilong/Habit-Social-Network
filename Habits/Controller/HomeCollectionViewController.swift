@@ -7,19 +7,10 @@
 
 import UIKit
 
-enum SupplementaryItemType{
-    case collectionSupplementaryView
-    case layoutDecorationView
-}
 
-protocol SupplementaryItem{
-    var itemType: SupplementaryItemType { get }
-    
-    var viewKind: String { get }
-}
 
 enum SupplementaryView: String, CaseIterable, SupplementaryItem{
-   case leaderboardSectionHeader
+    case leaderboardSectionHeader
     case leaderboardBackground
     case followedUsersSectionHeader
     
@@ -385,6 +376,8 @@ class HomeCollectionViewController: UICollectionViewController {
             header.nameLabel.font = UIFont.preferredFont(forTextStyle: .title2)
             header.alignLabelToYCenter()
         }
+        
+        
         
         dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
             guard let elementKind = SupplementaryView(rawValue: kind) else{

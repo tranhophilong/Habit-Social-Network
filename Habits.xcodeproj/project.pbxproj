@@ -20,6 +20,8 @@
 		860A53C32BB129F500D4E869 /* FollowedCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 860A53C12BB129F500D4E869 /* FollowedCollectionViewCell.xib */; };
 		860A53C52BB1391B00D4E869 /* CombinedStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860A53C42BB1391B00D4E869 /* CombinedStats.swift */; };
 		860A53C72BB3E7FB00D4E869 /* Color + Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860A53C62BB3E7FB00D4E869 /* Color + Extras.swift */; };
+		8625DE002BBD244500AA8998 /* CheckMarkSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8625DDFF2BBD244500AA8998 /* CheckMarkSupplementaryView.swift */; };
+		8625DE022BBD282B00AA8998 /* SupplementaryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8625DE012BBD282B00AA8998 /* SupplementaryItem.swift */; };
 		8693BCD82BAC8A94009483A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8693BCD72BAC8A94009483A8 /* AppDelegate.swift */; };
 		8693BCDA2BAC8A94009483A8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8693BCD92BAC8A94009483A8 /* SceneDelegate.swift */; };
 		8693BCDF2BAC8A94009483A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8693BCDD2BAC8A94009483A8 /* Main.storyboard */; };
@@ -54,6 +56,8 @@
 		860A53C12BB129F500D4E869 /* FollowedCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = FollowedCollectionViewCell.xib; path = Habits/View/FollowedCollectionViewCell.xib; sourceTree = SOURCE_ROOT; };
 		860A53C42BB1391B00D4E869 /* CombinedStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinedStats.swift; sourceTree = "<group>"; };
 		860A53C62BB3E7FB00D4E869 /* Color + Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color + Extras.swift"; sourceTree = "<group>"; };
+		8625DDFF2BBD244500AA8998 /* CheckMarkSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckMarkSupplementaryView.swift; sourceTree = "<group>"; };
+		8625DE012BBD282B00AA8998 /* SupplementaryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplementaryItem.swift; sourceTree = "<group>"; };
 		8693BCD42BAC8A94009483A8 /* Habits.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Habits.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8693BCD72BAC8A94009483A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8693BCD92BAC8A94009483A8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -95,6 +99,7 @@
 				860A53BD2BB124D600D4E869 /* LeaderboardHabitCollectionViewCell.xib */,
 				860A53C02BB129F500D4E869 /* FollowedCollectionViewCell.swift */,
 				860A53C12BB129F500D4E869 /* FollowedCollectionViewCell.xib */,
+				8625DDFF2BBD244500AA8998 /* CheckMarkSupplementaryView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -170,6 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				8693BD002BAD43EB009483A8 /* APIRequest.swift */,
+				8625DE012BBD282B00AA8998 /* SupplementaryItem.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -254,6 +260,7 @@
 				8693BCFC2BAD3D83009483A8 /* Category.swift in Sources */,
 				8693BD072BAD96ED009483A8 /* UICollectionViewDiffableDataSource+ViewModel.swift in Sources */,
 				860A53C22BB129F500D4E869 /* FollowedCollectionViewCell.swift in Sources */,
+				8625DE002BBD244500AA8998 /* CheckMarkSupplementaryView.swift in Sources */,
 				8693BD012BAD43EB009483A8 /* APIRequest.swift in Sources */,
 				8693BCFE2BAD3D9F009483A8 /* Color.swift in Sources */,
 				8693BD052BAD8AFD009483A8 /* Settings.swift in Sources */,
@@ -268,6 +275,7 @@
 				860A53B32BAEA94C00D4E869 /* HabitStatistics.swift in Sources */,
 				860A53B92BAF1EA300D4E869 /* HabitCount.swift in Sources */,
 				8693BCD82BAC8A94009483A8 /* AppDelegate.swift in Sources */,
+				8625DE022BBD282B00AA8998 /* SupplementaryItem.swift in Sources */,
 				8693BCF42BAD3830009483A8 /* LogHabitCollectionViewController.swift in Sources */,
 				8693BD032BAD4D49009483A8 /* APIService.swift in Sources */,
 				8693BCFA2BAD3CAE009483A8 /* Habit.swift in Sources */,

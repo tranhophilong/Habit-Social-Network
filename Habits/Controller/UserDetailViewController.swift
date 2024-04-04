@@ -111,8 +111,8 @@ class UserDetailViewController: UIViewController {
         bioLabel.text = user.bio
         userNameLabel.text = user.name
         
-        collectionView.register(NameSectionHeaderView.self, forSupplementaryViewOfKind: SectionHeader.kind.identifier, withReuseIdentifier: SectionHeader.reuse.identifier)
-        
+//        collectionView.register(NameSectionHeaderView.self, forSupplementaryViewOfKind: SectionHeader.kind.identifier, withReuseIdentifier: SectionHeader.reuse.identifier)
+//        
         dataSource = createDataSource()
         collectionView.dataSource = dataSource
         collectionView.collectionViewLayout = createLayout()

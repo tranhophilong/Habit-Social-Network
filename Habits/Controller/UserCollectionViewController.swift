@@ -12,6 +12,23 @@ class UserCollectionViewController: UICollectionViewController {
     
     typealias DataSourceType = UICollectionViewDiffableDataSource<ViewModel.section, ViewModel.Item.ID>
     
+    enum DecorationView: String, SupplementaryItem{
+        case checkMark
+        
+        var itemType: SupplementaryItemType {
+            switch self{
+            case .checkMark:
+                return .layoutDecorationView
+            }
+            
+        }
+        
+        var viewKind: String {
+            return rawValue
+        }
+        
+    }
+    
     enum ViewModel{
         typealias section = Int
         
@@ -107,18 +124,49 @@ class UserCollectionViewController: UICollectionViewController {
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
         }
         
+        let supplementaryItemRegistration = UICollectionView.SupplementaryRegistration<CheckMarkSupplementaryView>(elementKind: DecorationView.checkMark.viewKind) {[weak self] checkMarkView, elementKind, indexPath in
+            
+            guard let self, let itemIndentifier = datasource.itemIdentifier(for: indexPath),  let item =  items.first(where: {$0.id == itemIndentifier})  else {
+                return
+            }
+            
+            
+            checkMarkView.imageView.isHidden = !item.isFollowed
+            
+            
+        }
+        
+        
+        
+        datasource.supplementaryViewProvider = {collectionView, elementKind, indexPath in
+            return collectionView.dequeueConfiguredReusableSupplementary(using: supplementaryItemRegistration, for: indexPath)
+            
+            
+        }
+        
+        
         return datasource
     }
     
+ 
     func createLayout() -> UICollectionViewCompositionalLayout{
-        
+               
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalHeight(1), heightDimension: .fractionalHeight(1))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        
+        let supplementaryItemSize = NSCollectionLayoutSize(widthDimension: .absolute(45),
+                                                          heightDimension: .absolute(45))
+        let supplementaryItemPlace = NSCollectionLayoutAnchor(edges: [.top, .trailing])
+        let supplementaryItem = NSCollectionLayoutSupplementaryItem(layoutSize: supplementaryItemSize,
+                                                           elementKind: DecorationView.checkMark.viewKind,
+                                                                   containerAnchor: supplementaryItemPlace)
+        
+        let item = NSCollectionLayoutItem(layoutSize: itemSize, supplementaryItems: [supplementaryItem])
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(0.45))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item, item])
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.interItemSpacing = .fixed(20)
-        
+            
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 20
         section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
@@ -132,13 +180,20 @@ class UserCollectionViewController: UICollectionViewController {
         let config = UIContextMenuConfiguration(actionProvider:  { [weak self] _ in
             guard let self, let indexPath = indexPaths.first, let itemIndentifier = dataSource.itemIdentifier(for: indexPath), let item = items.first(where: {$0.id == itemIndentifier}) else {return nil}
             
+            let uiMenu: UIMenu?
             
-            let followedToggle = UIAction(title: item.isFollowed ? "Unfollow" : "Follow") { action in
-                Settings.shared.toggleFollowed(item.user)
-                self.updateCollectionView()
+            if item.user.id == Settings.shared.currentUser.id{
+                uiMenu = nil
+            }else{
+                let followedToggle = UIAction(title: item.isFollowed ? "Unfollow" : "Follow") { action in
+                    Settings.shared.toggleFollowed(item.user)
+                    self.updateCollectionView()
+                 
+                }
+                uiMenu = UIMenu(title: "", children: [followedToggle])
             }
             
-            return UIMenu(title: "", children: [followedToggle])
+            return uiMenu
         })
         
         return config
