@@ -80,6 +80,7 @@ enum ImageRequestError: Error{
 }
 
 extension APIRequest where Response == UIImage{
+ 
     func send() async throws -> UIImage{
         let (data, response) = try await URLSession.shared.data(for: request)
         
@@ -93,6 +94,8 @@ extension APIRequest where Response == UIImage{
         
         return image
     }
+    
+   
 }
 
 extension APIRequest{

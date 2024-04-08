@@ -7,7 +7,7 @@
 
 import UIKit
 
-
+@MainActor
 extension UICollectionViewDiffableDataSource{
     
     func applySnapshotUsing(sectionIDs: [SectionIdentifierType], itemBySections: [SectionIdentifierType: [ItemIdentifierType]], sectionsRetainedIfEmpty: Set<SectionIdentifierType> = Set<SectionIdentifierType>()){

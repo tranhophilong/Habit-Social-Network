@@ -133,7 +133,7 @@ class UserDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-       update()
+        update()
         updateTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { _ in
             self.update()
         })
@@ -170,10 +170,6 @@ class UserDetailViewController: UIViewController {
             self.updateCollectionView()
             habitLeadStatisticsRequestTask = nil
         }
-        
-        
-        
-      
         
     }
     

@@ -73,12 +73,15 @@ class HabitCollectionViewController: UICollectionViewController {
         collectionView.dataSource  = dataSource
         collectionView.collectionViewLayout = createLayout()
         
+       
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+    
         update()
+        
     }
     
     func update(){

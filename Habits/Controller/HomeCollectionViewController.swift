@@ -452,7 +452,35 @@ class HomeCollectionViewController: UICollectionViewController {
         
     }
     
+//    MARK: Delegate
     
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let itemIdentifer = dataSource.itemIdentifier(for: indexPath), let item = items.first(where: {$0.id == itemIdentifer}) else { return }
+        
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+
+        switch item{
+        case .leaderboardHabit(name: let name, leadingUserRanking: _, secondaryUserRanking: _):
+          
+            let habitItem = model.habitsByName[name]!
+            
+            let controller = storyboard.instantiateViewController(identifier: "HabitDetailViewController") { coder in
+                HabitDetailViewController(coder: coder, habit: habitItem)
+            }
+                        
+
+            self.present(controller, animated: true)
+            
+        case .followedUser(let user, message: _):
+           
+            let controller = storyboard.instantiateViewController(identifier: "UserDetailViewController") { coder in
+                UserDetailViewController(coder: coder, user: user)
+            }
+
+            self.present(controller, animated: true)
+        }
+    }
     
     
    

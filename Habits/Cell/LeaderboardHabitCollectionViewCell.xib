@@ -10,10 +10,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="LeaderBoardHabitCollectionViewCell" customModule="Habits" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="300" height="100"/>
+            <rect key="frame" x="0.0" y="0.0" width="300" height="112"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="300" height="100"/>
+                <rect key="frame" x="0.0" y="0.0" width="300" height="112"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Habit Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xAP-f8-Sth">
@@ -23,13 +23,13 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Leader" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LQ4-Aq-yik">
-                        <rect key="frame" x="244" y="48" width="48" height="18"/>
+                        <rect key="frame" x="244" y="60" width="48" height="18"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Secondary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TCd-JE-kt2">
-                        <rect key="frame" x="218" y="74" width="74" height="18"/>
+                        <rect key="frame" x="218" y="86" width="74" height="18"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -48,13 +48,13 @@
                 <constraint firstItem="xAP-f8-Sth" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="d80-Xc-JsK"/>
                 <constraint firstItem="LQ4-Aq-yik" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ZTg-uK-7eu" secondAttribute="leading" constant="8" id="nQp-cm-7VJ"/>
             </constraints>
-            <size key="customSize" width="300" height="100"/>
+            <size key="customSize" width="300" height="112"/>
             <connections>
                 <outlet property="habitName" destination="xAP-f8-Sth" id="u2n-kA-dPw"/>
                 <outlet property="leaderLabel" destination="LQ4-Aq-yik" id="ZaI-Td-cbT"/>
                 <outlet property="secondaryLabel" destination="TCd-JE-kt2" id="vgP-RD-8wX"/>
             </connections>
-            <point key="canvasLocation" x="612" y="-139"/>
+            <point key="canvasLocation" x="450" y="-248"/>
         </collectionViewCell>
     </objects>
 </document>

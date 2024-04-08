@@ -19,6 +19,8 @@ struct UserRequest: APIRequest{
     
     var path: String {"/users"}
     
+    
+    
 }
 
 struct HabitStatisticsRequest: APIRequest{
@@ -72,7 +74,6 @@ struct ImageRequest: APIRequest{
     var imageID: String
     
     var path: String {"/images/" + imageID}
-    
     
 }
 
